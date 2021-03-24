@@ -1,25 +1,52 @@
-import logo from './logo.svg';
+import React, { useState, useEffect } from 'react';
 import './App.css';
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+  const [error, setError] = useState(null);
+  const [isLoaded, setIsLoaded] = useState(false);
+  const [data, setItems] = useState([]);
+
+  useEffect(() => {
+    fetch('https://swapi.dev/api/people')
+      .then((res) => res.json())
+      .then(
+        (result) => {
+          setIsLoaded(true);
+          setItems(result);
+        },
+        (error) => {
+          setIsLoaded(true);
+          setError(error);
+        }
+      );
+  }, []);
+
+  if (error) {
+    return <div>Error: {error.message}</div>;
+  } else if (!isLoaded) {
+    return <div>Loading Page</div>;
+  } else {
+    console.log(data.results);
+    if (data.results) {
+      return (
+        <div className="container">
+          <h1>The Star Wars Characters</h1>
+          <div className="row">
+            {data.results.map((person, i) => (
+              <div className="character-info" key={i}>
+                <h2>{person.name}</h2>
+                <div>Birth Year: {person.birth_year}</div>
+                <div>Height: {person.height}</div>
+                <div>Mass: {person.mass}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      );
+    } else {
+      return <div>Loading API Response</div>;
+    }
+  }
 }
 
 export default App;
