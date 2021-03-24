@@ -31,10 +31,10 @@ function App() {
       return (
         <div className="container">
           <h1>The Star Wars Characters</h1>
-          <div className="row">
+          <div id="characters" className="row">
             {data.results.map((person, i) => (
-              <div className="character-info" key={i}>
-                <h2>{person.name}</h2>
+              <div className="col-lg-4 col-md-4" key={i}>
+                <h3>{person.name}</h3>
                 <div>Birth Year: {person.birth_year}</div>
                 <div>Height: {person.height}</div>
                 <div>Mass: {person.mass}</div>
