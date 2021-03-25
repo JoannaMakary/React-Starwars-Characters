@@ -5,8 +5,8 @@ import { singleCharacter } from './apiCharacter';
 class Character extends Component {
   state = {
     character: '',
-    redirectToHome: false,
     errorMessage: '',
+    loading: true,
   };
 
   componentDidMount = () => {
@@ -15,7 +15,7 @@ class Character extends Component {
       if (data.error) {
         this.setState({ errorMessage: data.error });
       } else {
-        this.setState({ character: data });
+        this.setState({ character: data, loading: false });
       }
     });
   };
@@ -49,12 +49,24 @@ class Character extends Component {
   };
 
   render() {
-    const { character } = this.state;
+    const { character, loading } = this.state;
     return (
       <div className="container">
         <Link to="/characters" className="shadow">
           <div id="back-btn">Back to Characters</div>
         </Link>
+        {loading ? (
+          <div className="loading">
+            <img
+              src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/585d0331234507.564a1d239ac5e.gif"
+              width="5%"
+              className="mr-4"
+            />
+            Loading...
+          </div>
+        ) : (
+          ''
+        )}
         {this.renderCharacter(character)}
       </div>
     );

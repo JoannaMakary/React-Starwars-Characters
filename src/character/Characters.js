@@ -6,9 +6,10 @@ function Characters() {
   const [error, setError] = useState(null);
   const [isLoaded, setIsLoaded] = useState(false);
   const [data, setItems] = useState([]);
+  var [page, setPage] = useState(1);
 
   useEffect(() => {
-    fetch('https://swapi.dev/api/people')
+    fetch(`https://swapi.dev/api/people/?search=a&page=${page}`)
       .then((res) => res.json())
       .then(
         (result) => {
@@ -20,14 +21,32 @@ function Characters() {
           setError(error);
         }
       );
-  }, []);
+  }, [page]);
+
+  function prevPage() {
+    if (data.previous !== null) page -= 1;
+    console.log(page);
+  }
+
+  function nextPage() {
+    if (data.next !== null) page += 1;
+    console.log(page);
+  }
 
   if (error) {
     return <div>Error: {error.message}</div>;
   } else if (!isLoaded) {
-    return <div>Loading Page</div>;
+    return (
+      <div className="loading">
+        <img
+          src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/585d0331234507.564a1d239ac5e.gif"
+          width="5%"
+          className="mr-4"
+        />
+        Loading...
+      </div>
+    );
   } else {
-    console.log(data.results);
     if (data.results) {
       return (
         <div className="container">
@@ -47,10 +66,25 @@ function Characters() {
               </div>
             ))}
           </div>
+          <button className="prev-btn" onClick={() => prevPage()}>
+            Previous
+          </button>
+          <button className="next-btn" onClick={() => nextPage()}>
+            Next
+          </button>
         </div>
       );
     } else {
-      return <div>Loading API Response</div>;
+      return (
+        <div className="loading">
+          <img
+            src="https://mir-s3-cdn-cf.behance.net/project_modules/disp/585d0331234507.564a1d239ac5e.gif"
+            width="5%"
+            className="mr-4"
+          />
+          Loading...
+        </div>
+      );
     }
   }
 }
